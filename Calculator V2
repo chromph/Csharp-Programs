@@ -1,0 +1,133 @@
+using System;
+using System.Numerics;
+
+public class CalculationResult
+{
+    public float A { get; set; }
+    public float B { get; set; }
+    public string Operation { get; set; }
+    public float Answer { get; set; }
+
+    public void Output()
+    {
+        Console.WriteLine($"{A} {Operation} {B} = {Answer}");
+    }
+
+    public CalculationResult(float a, float b, string op, float ans)
+    {
+        A = a; B = b; Operation = op; Answer = ans;
+    }
+}
+
+class Program
+{
+    public static List<CalculationResult> calculationHistory = new List<CalculationResult> { };
+
+    static string lineBreak = "--------------------------";
+    static float Calculate(float A, float B, string Operator)
+    {
+        switch (Operator)
+        {
+            case ("+"):
+                return A + B;
+
+            case ("-"):
+                return A - B;
+
+            case ("*"):
+                return A * B;
+
+            case ("/"):
+                if (A == 0 || B == 0)
+                {
+                    return 0f;
+                }
+                return A / B;
+
+            case ("^"):
+                return MathF.Pow(A, B);
+        }
+
+        return 0;
+    }
+
+    static float ToNumber(string number)
+    {
+        if (float.TryParse(number, out float result))
+        {
+            return result;
+        }
+        else if (number.ToLower() == "pi")
+        {
+            return MathF.PI;
+        }
+
+        return 0f;
+    }
+
+    static string GetInput(string command)
+    {
+        Console.WriteLine(command);
+        string input = Console.ReadLine();
+        while (input == "" || input == null)
+        {
+            input = Console.ReadLine();
+        }
+
+        return input;
+    }
+    static void InputEquation()
+    {
+        Console.WriteLine("");
+        float A = ToNumber(GetInput("Number A?"));
+        string Operator = GetInput("Operator?");
+        float B = ToNumber(GetInput("Number B?"));
+
+        float answer = Calculate(A, B, Operator);
+
+        CalculationResult calculation = new CalculationResult(A, B, Operator, answer);
+        calculation.Output();
+
+        calculationHistory.Add(calculation);
+    }
+    static void Main()
+    {
+        string again = "y";
+
+        while (again == "y")
+        {
+            Console.WriteLine("Cool Calculator! Input your stuff...");
+            Console.WriteLine(lineBreak);
+
+            InputEquation();
+
+            again = GetInput("Go again:(y) | View calculator history:(1)");
+
+            Console.WriteLine("");
+
+            switch (again)
+            {
+                case ("1"):
+                    Console.WriteLine(lineBreak);
+                    Console.WriteLine("CALCULATION HISTORY");
+
+                    int i = 0;
+                    foreach (CalculationResult result in calculationHistory)
+                    {
+                        i++;
+                        Console.Write(i+": ");
+                        result.Output();
+                        Console.WriteLine("");
+                    }
+                    break;
+            }
+
+            if (again != "y" && again != "n")
+            {
+                again = "y";
+            }
+
+            Console.WriteLine(lineBreak);
+        }
+    }
+}
