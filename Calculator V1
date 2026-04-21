@@ -1,0 +1,123 @@
+using System;
+using System.Numerics;
+
+class Program
+{
+    static List<string[]> inputHistory = new List<string[]> { };
+    static List<float> answerHistory = new List<float> { };
+
+    static string lineBreak = "--------------------------";
+    static float Calculate(float A, float B, string Operator)
+    {
+        switch (Operator)
+        {
+            case ("+"):
+                return A + B;
+
+            case ("-"):
+                return A - B;
+
+            case ("*"):
+                return A * B;
+
+            case ("/"):
+                return A / B;
+
+            case ("^"):
+                return MathF.Pow(A, B);
+        }
+
+        return 0;
+    }
+
+    static float ToNumber(string number)
+    {
+        if (float.TryParse(number, out float result))
+        {
+            return result;
+        }
+        else if (number == "pi")
+        {
+            return MathF.PI;
+        }
+
+        return 0f;
+    }
+
+    static string GetInput(string command)
+    {
+        Console.WriteLine(command);
+        string input = Console.ReadLine();
+        while (input == "" | input == null)
+        {
+            input = Console.ReadLine();
+        }
+
+        return input;
+    }
+    static void Input()
+    {
+        Console.WriteLine("");
+        string A = GetInput("Number A?");
+        string Operator = GetInput("Operator?");
+        string B = GetInput("Number B?");
+
+        float answer = Calculate(ToNumber(A), ToNumber(B), Operator);
+
+        string[] inputTable = { A, Operator, B };
+
+        inputHistory.Add(inputTable);
+        answerHistory.Add(answer);
+
+        Console.WriteLine("Answer: "+answer);
+    }
+    static void Main()
+    {
+        string again = "y";
+
+        while (again == "y")
+        {
+            Console.WriteLine("Cool Calculator! Input your stuff...");
+            Console.WriteLine(lineBreak);
+
+            Input();
+
+            again = GetInput("Go again:(y) | View input history:(1) | View answer history: (2)");
+
+            Console.WriteLine("");
+
+            switch (again)
+            {
+                case ("1"):
+                    Console.WriteLine(lineBreak);
+                    Console.WriteLine("INPUT HISTORY");
+                    foreach (string[] inputs in inputHistory)
+                    {
+                        foreach (string input in inputs)
+                        {
+                            Console.Write(input + " ");
+                        }
+                        Console.WriteLine("");
+                    }
+                    break;
+
+                case ("2"):
+                    Console.WriteLine(lineBreak);
+                    Console.WriteLine("ANSWER HISTORY");
+                    foreach (float answer in answerHistory)
+                    {
+                        Console.Write(answer + " ");
+                        Console.WriteLine("");
+                    }
+                    break;
+            }
+
+            if (again != "y" && again != "n")
+            {
+                again = "y";
+            }
+
+            Console.WriteLine(lineBreak);
+        }
+    }
+}
